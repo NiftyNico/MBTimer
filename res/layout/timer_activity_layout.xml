@@ -8,9 +8,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".TimerActivity" >
 
-    <TextView
+    <Button
+        android:id="@+id/adpButton"
+        android:text="@string/first_clock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
+    <Button
+         android:id="@+id/startTimerButton"
+         android:text="@string/start_Timer"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerHorizontal="true"
+         android:layout_below="@id/adpButton"
+            />
+
 
 </RelativeLayout>
