@@ -24,7 +24,8 @@ public class TimerActivity extends Activity {
 
     Button clockIn;
     Button startTimer;
-
+    Button gpsButton;
+    
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,8 +37,11 @@ public class TimerActivity extends Activity {
 		
         clockIn = (Button) findViewById(R.id.adpButton);
         startTimer = (Button) findViewById(R.id.startTimerButton);
+        gpsButton = (Button) findViewById(R.id.gpsButton);
         
-        Log.w("Debug", str);
+        final GPSTracker gps = new GPSTracker(this);
+        
+        //Log.w("Debug", str);
         
         clockIn.setOnClickListener(new OnClickListener()
         {
@@ -56,6 +60,15 @@ public class TimerActivity extends Activity {
             	startAlarmService();
             }
         });
+        
+        gpsButton.setOnClickListener(new OnClickListener(){
+            public void onClick(View view) {
+                if(gps.isGPSEnabled)
+                {
+                	Log.w("Coordinates", "Latitude: " + gps.latitude + ", Longitude: " + gps.longitude);
+                }
+            }
+        });
     }
     
     public void startAlarmService(){
@@ -69,12 +82,5 @@ public class TimerActivity extends Activity {
   	  	intent.putExtra(Constants.RQS, AlarmService.RQS_STOP_SERVICE);
   	  	sendBroadcast(intent);
     }
-
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.timer, menu);
-		return true;
-	}*/
 
 }

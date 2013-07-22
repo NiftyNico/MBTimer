@@ -25,5 +25,15 @@
          android:layout_centerHorizontal="true"
          android:layout_below="@id/adpButton"
             />
+    
+        <Button
+        android:id="@+id/gpsButton"
+        android:text="Get GPS COORDINTATESE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/startTimerButton"
+        />
 
 </RelativeLayout>
