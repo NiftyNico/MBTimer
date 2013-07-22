@@ -10,21 +10,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.Button;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class TimerActivity extends Activity {
-
-    final static private long ONE_SECOND = 1000;
-    final static private long TWENTY_SECONDS = ONE_SECOND * 20;
-
-    PendingIntent pi;
-    BroadcastReceiver br;
-    AlarmManager am;
 
     Button clockIn;
     Button startTimer;
@@ -33,20 +29,22 @@ public class TimerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.timer_activity_layout);
-
+		
+		String str = getIntent().getStringExtra(Constants.COMMAND);
+		if (str == null)
+			str = "null";
+		
         clockIn = (Button) findViewById(R.id.adpButton);
         startTimer = (Button) findViewById(R.id.startTimerButton);
-
-        am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
-
-        setup();
+        
+        Log.w("Debug", str);
+        
         clockIn.setOnClickListener(new OnClickListener()
         {
             public void onClick(View v)
-            {
-                String url = "https://portal.adp.com/";
+            {	
                 Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
+                i.setData(Uri.parse(Constants.ADP_PORTAL));
                 startActivity(i);
             }
         });
@@ -54,38 +52,29 @@ public class TimerActivity extends Activity {
         startTimer.setOnClickListener(new OnClickListener()
         {
             public void onClick(View view) {
-                am.set( AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + TWENTY_SECONDS, pi );
+            	stopAlarmService();
+            	startAlarmService();
             }
         });
     }
+    
+    public void startAlarmService(){
+  	  Intent intent = new Intent(TimerActivity.this, com.example.mbtimer.AlarmService.class);
+  	  TimerActivity.this.startService(intent);
+    }
+    
+    public void stopAlarmService(){
+  	  	Intent intent = new Intent();
+  	  	intent.setAction(AlarmService.ACTION);
+  	  	intent.putExtra(Constants.RQS, AlarmService.RQS_STOP_SERVICE);
+  	  	sendBroadcast(intent);
+    }
 
-        private void setup() {
-            br = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context c, Intent i) {
-                    Toast.makeText(c, "Rise and Shine!", Toast.LENGTH_LONG).show();
-                }
-            };
-            registerReceiver(br, new IntentFilter("com.authorwjf.wakeywakey") );
-            pi = PendingIntent.getBroadcast( this, 0, new Intent("com.authorwjf.wakeywakey"), 0 );
-            am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
-        }
-
-        @Override
-        protected void onDestroy() {
-            am.cancel(pi);
-            unregisterReceiver(br);
-            super.onDestroy();
-        }
-
-
-
-
-	@Override
+	/*@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.timer, menu);
 		return true;
-	}
+	}*/
 
 }

@@ -26,5 +26,4 @@
          android:layout_below="@id/adpButton"
             />
 
-
 </RelativeLayout>
