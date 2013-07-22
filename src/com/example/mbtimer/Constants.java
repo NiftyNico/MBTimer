@@ -18,6 +18,6 @@ public final class Constants {
     
     public static final String COMMAND = "cmd";
     public static final String RQS = "RQS";
-    public static final String ADP_PORTAL = "https://portal.adp.com/";
+    public static final String ADP_PORTAL = "https://portal.adp.com/wps/employee/employee.jsp";
     public static final String SETTINGS_FILE = "settings";
 }
