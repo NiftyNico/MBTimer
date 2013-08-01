@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="BLUE">Blue</string>
+    <string name="GREY">Grey</string>
+    <string name="GREEN">Green</string>
+    <string name="PURPLE">Purple</string>
+    <string name="ORANGE">Orange</string>
+    <string name="GOLD">Gold</string>
+    <string name="BLACK">Black</string>
+
+    <item name="BLUE_INT" type="integer">0</item>
+    <item name="GREY_INT" type="integer">1</item>
+    <item name="GREEN_INT" type="integer">2</item>
+    <item name="PURPLE_INT" type="integer">3</item>
+    <item name="ORANGE_INT" type="integer">4</item>
+    <item name="GOLD_INT" type="integer">5</item>
+    <item name="BLACK_INT" type="integer">6</item>
+
+    <string-array name="pass_colors_string">
+        <item>@string/BLUE</item>
+        <item>@string/GREY</item>
+        <item>@string/GREEN</item>
+        <item>@string/PURPLE</item>
+        <item>@string/ORANGE</item>
+        <item>@string/GOLD</item>
+        <item>@string/BLACK</item>
+    </string-array>
+
+    <integer-array name="pass_colors_int">
+        <item>@integer/BLUE_INT</item>
+        <item>@integer/GREY_INT</item>
+        <item>@integer/GREEN_INT</item>
+        <item>@integer/PURPLE_INT</item>
+        <item>@integer/ORANGE_INT</item>
+        <item>@integer/GOLD_INT</item>
+        <item>@integer/BLACK_INT</item>
+    </integer-array>
+
+</resources>

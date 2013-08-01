@@ -1,0 +1,327 @@
+package mb.android.redalert;
+
+import com.example.mbtimer.R;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ListActivity;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.text.format.DateFormat;
+import android.text.format.Time;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+
+public class SettingsActivity extends ListActivity {
+
+    public class MainSettingsAdapter extends ArrayAdapter<String>{
+/*
+        Context context;
+        int layoutResourceId;
+        int listSize;
+        ArrayList<String> entries;
+
+        private MainSettingsAdapter(Context context, int layoutResourceId, ArrayList<String> entries) {
+            super(context, layoutResourceId, entries);
+            this.layoutResourceId = layoutResourceId;
+            this.context = context;
+            this.entries = entries;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            View item = inflater.inflate(layoutResourceId, parent, false);
+
+	        TextView rowText = (TextView)item.findViewById(R.id.settingsRowParkingText); // title
+	        ImageView rowImage = (ImageView)item.findViewById(R.id.settingsRowParkingImage); // thumb image
+	        
+//	        rowImage.setImageDrawable(item.getResources().getDrawable(R.drawable.autobotlogo));
+            rowText.setText(entries.get(position));
+            
+            if(position % 2 == 0){
+                item.setBackgroundColor(0xFFFAFAFA);
+            } else {
+                item.setBackgroundColor(0xFFFFFFFF);
+            }
+            
+            return item;
+        }*/
+    	
+		ArrayList<String> entries;
+        Context context;
+        int layoutResourceId;
+        
+	    public MainSettingsAdapter(Context context, int layoutResourceId, ArrayList<String> entries) {    	
+            super(context, layoutResourceId, entries);
+	        this.entries=entries;
+	    	this.context = context;
+	    	this.layoutResourceId = layoutResourceId;
+	    }
+	    
+	    @Override
+	    public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            View item = inflater.inflate(layoutResourceId, parent, false);
+
+	        TextView rowText = (TextView)item.findViewById(R.id.settingsRowParkingText); // title
+	        ImageView rowImage = (ImageView)item.findViewById(R.id.settingsRowParkingImage); // thumb image
+
+	        // Setting all values in listview
+	        rowText.setText(entries.get(position));
+	        
+	        Drawable d;
+	        
+	        switch(position){
+	        	case 0:
+	        		d = item.getResources().getDrawable(R.drawable.lock);
+	        		break;
+	        	case 1:
+	        		d = item.getResources().getDrawable(R.drawable.redpass);
+	        		break;
+	        	case 2:
+	        		d = item.getResources().getDrawable(R.drawable.notification_icon);
+	        		break;
+	        	default:
+	        		d = item.getResources().getDrawable(R.drawable.autobotlogo);
+	        		break;
+	        }
+	        
+	        rowImage.setImageDrawable(d);	      
+	        return item;
+	    }
+    	
+    }
+
+    private class PassSettingsAdapter extends ArrayAdapter<String>{    
+		ArrayList<String> colors;
+        Context context;
+        int layoutResourceId;
+        
+	    private PassSettingsAdapter(Context context, int layoutResourceId, ArrayList<String> entries) {    	
+            super(context, layoutResourceId, entries);
+	        this.colors=entries;
+	    	this.context = context;
+	    	this.layoutResourceId = layoutResourceId;
+	    }
+	    
+	    @Override
+	    public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            View item = inflater.inflate(layoutResourceId, parent, false);
+
+	        TextView rowText = (TextView)item.findViewById(R.id.settingsRowParkingText); // title
+	        ImageView rowImage = (ImageView)item.findViewById(R.id.settingsRowParkingImage); // thumb image
+
+	        // Setting all values in listview
+	        rowText.setText(colors.get(position));
+	        
+	        Drawable d;
+	        
+	        switch(position){
+	        	case 0:
+	        		d = item.getResources().getDrawable(R.drawable.bluepass);
+	        		break;
+	        	case 1:
+	        		d = item.getResources().getDrawable(R.drawable.greypass);
+	        		break;
+	        	case 2:
+	        		d = item.getResources().getDrawable(R.drawable.greenpass);
+	        		break;
+	        	case 3:
+	        		d = item.getResources().getDrawable(R.drawable.purplepass);
+	        		break;
+	        	case 4:
+	        		d = item.getResources().getDrawable(R.drawable.orangepass);
+	        		break;
+	        	case 5:
+	        		d = item.getResources().getDrawable(R.drawable.goldpass);
+	        		break;
+	        	case 6:
+	        		d = item.getResources().getDrawable(R.drawable.blackpass);
+	        		break;
+	        	default:
+	        		d = item.getResources().getDrawable(R.drawable.autobotlogo);
+	        		break;
+	        }
+	        
+	        rowImage.setImageDrawable(d);	        
+	        return item;
+	    }
+    }
+
+
+    // This is the Adapter being used to display the list's data
+    MainSettingsAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.settings_layout);
+
+        // storing string resources into Array
+        ListView lv = getListView();
+
+        mAdapter = new MainSettingsAdapter(this, R.layout.settings_row
+                , new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.setting_options))));
+
+        // Binding resources Array to ListAdapter
+        lv.setAdapter(mAdapter);
+        Log.w("# items", "" + lv.getCount());
+        // listening to single list item on click
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                switch(position){
+                    case 0:
+                        setupLoginDialog();
+                        break;
+                    case 1:
+                    	setupPassColor(SettingsActivity.this);
+                        break;
+                    case 2:
+                    	setupNotifications();
+                        break;
+                    default:                 	
+                        break;
+                }
+            }
+        });       
+    }
+
+    public void setupLoginDialog(){
+        final Dialog dialog = new Dialog(SettingsActivity.this);
+        dialog.setContentView(R.layout.settings_login_dialog);
+        dialog.setTitle("Edit your ADP username and password");
+
+        ImageView image = (ImageView) dialog.findViewById(R.drawable.adp_login_normal);
+        final EditText user = (EditText) dialog.findViewById(R.id.username);
+        final EditText pass = (EditText) dialog.findViewById(R.id.password);
+        final Button cancel = (Button) dialog.findViewById(R.id.login_dialog_cancel);
+        final Button confirm = (Button) dialog.findViewById(R.id.login_dialog_confirm);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(user.getText().length() == 0 && pass.getText().length() == 0){
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Enter a Username and Password", Toast.LENGTH_LONG);
+                    toast.show();
+                } else if(user.getText().length() == 0){
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Enter a Username", Toast.LENGTH_LONG);
+                    toast.show();
+                } else if(pass.getText().length() == 0){
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Enter a Password", Toast.LENGTH_LONG);
+                    toast.show();
+                } else {
+                    Settings s = new Settings();
+                    s.userName = user.getText().toString();
+                    s.passWord = pass.getText().toString();
+                    
+                    s.save();
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.show();
+    }
+    
+    public static void setupPassColor(Context ctxt){
+        final Dialog dialog = new Dialog(ctxt);
+        SettingsActivity a = new SettingsActivity();
+        dialog.setContentView(R.layout.settings_change_parking_listview);
+        dialog.setTitle("Select your badge");
+
+        ListView l = (ListView) dialog.findViewById(R.id.settingsPassListView);
+        PassSettingsAdapter adapter = a.new PassSettingsAdapter(ctxt, R.layout.settings_row, new ArrayList<String>(Arrays.asList(ctxt.getResources().getStringArray(R.array.pass_colors_string))));
+        l.setAdapter(adapter);
+        dialog.show();
+
+        l.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view, int position,
+					long id) {
+				Settings s = new Settings();
+		    
+				s.passColor = position;
+	        	s.save();
+	        	dialog.dismiss();
+			}
+        	
+        });
+    }
+
+    public void setupNotifications(){
+        final Dialog dialog = new Dialog(SettingsActivity.this);
+        dialog.setContentView(R.layout.notification_time_picker);
+        dialog.setTitle("Select a time for your parking reminders");
+
+        final TimePicker tp = (TimePicker) dialog.findViewById(R.id.timeSelect);
+        final CheckBox repeat = (CheckBox) dialog.findViewById(R.id.repeatWeeklyCheckbox);
+        Button cancel = (Button) dialog.findViewById(R.id.cancelTimeSetButton);
+        Button confirm = (Button) dialog.findViewById(R.id.confirmTimeSetButton);
+
+        cancel.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+        });
+
+        confirm.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) { 
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, tp.getCurrentHour());
+                calendar.set(Calendar.MINUTE, tp.getCurrentMinute());
+                calendar.set(Calendar.SECOND, 0);
+                
+                Settings s = new Settings();
+                
+                s.alarmTime = calendar.getTime();
+                s.repeatDaily = repeat.isChecked();           
+                s.save();
+
+                startService(new Intent(SettingsActivity.this, AlarmService.class));
+                dialog.dismiss();
+			}
+        });
+
+        dialog.show();
+    }
+}

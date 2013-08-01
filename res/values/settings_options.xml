@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name ="log">Edit Login Credentials</string>
+    <string name ="parking">Edit Parking Pass</string>
+    <string name ="notifications">Notifications</string>
+
+    <string-array name="setting_options">
+       <item>@string/log</item>
+       <item>@string/parking</item>
+       <item>@string/notifications</item>
+    </string-array>
+
+</resources>
