@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="SECOND">1000</integer>
+    <integer name="MINUTE">60000</integer>
+    <integer name="HOUR">3600000</integer>
+    <integer name="DAY">86400000</integer>
+    <integer name="WEEK">604800000</integer>
+
+</resources>

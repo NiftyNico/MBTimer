@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mbtimer"
+    package="mb.android.redalert"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!--
@@ -26,7 +25,7 @@
         android:required="true" />
 
     <permission
-        android:name="mb.android.redalert.permission.MAPS_RECEIVE"
+        android:name="com.example.mbtimer.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <application
@@ -44,7 +43,9 @@
         <activity
             android:name="mb.android.redalert.AndroidTabLayoutActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:noHistory="true"
+            android:screenOrientation="portrait"  >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -53,17 +54,20 @@
         </activity>
         <activity
             android:name="mb.android.redalert.ParkingMapActivity"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:noHistory="true" />
         <activity
             android:name="mb.android.redalert.SettingsActivity"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:noHistory="true" />
         <activity
             android:name="mb.android.redalert.AdpActivity"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:noHistory="true" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAU_IJdgWMc_3EfoKpoWh02JQ8eIAb4PjE" />
+            android:value="AIzaSyDK0PAaaGNWuxHXgpc4zHTwktpMrz4IM3E" />
     </application>
 
 </manifest>

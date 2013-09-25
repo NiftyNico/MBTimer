@@ -1,7 +1,6 @@
 package mb.android.redalert;
 
-import com.example.mbtimer.R;
-
+import mb.android.redalert.R;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,12 +9,14 @@ import android.widget.TabHost.TabSpec;
 
 public class AndroidTabLayoutActivity extends TabActivity {
 	/* Called when the activity is first created. */
+	TabHost tabHost;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		TabHost tabHost = getTabHost();
+		tabHost = getTabHost();
 
 		TabSpec mapspec = tabHost.newTabSpec("");
 		// setting Title and Icon for the Tab
@@ -38,4 +39,15 @@ public class AndroidTabLayoutActivity extends TabActivity {
 		tabHost.addTab(adpspec); // Adding songs tab
 		tabHost.addTab(settingspec);
 	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    return tabHost.getCurrentTab();
+	}
+
+	@Override
+	protected void onSaveInstanceState (Bundle outState){
+	    outState.putInt("LastTab", tabHost.getCurrentTab());
+	}
+
 }

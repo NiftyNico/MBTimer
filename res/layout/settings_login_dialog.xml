@@ -4,7 +4,7 @@
               android:layout_height="wrap_content">
 
     <ImageView
-            android:src="@drawable/adp_login_normal"
+            android:src="@drawable/adp_login_normal_better"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:scaleType="center"

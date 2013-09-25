@@ -1,22 +1,22 @@
 package mb.android.redalert;
 
-import com.example.mbtimer.R;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.text.format.DateFormat;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -32,45 +32,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-
 public class SettingsActivity extends ListActivity {
 
     public class MainSettingsAdapter extends ArrayAdapter<String>{
-/*
-        Context context;
-        int layoutResourceId;
-        int listSize;
-        ArrayList<String> entries;
-
-        private MainSettingsAdapter(Context context, int layoutResourceId, ArrayList<String> entries) {
-            super(context, layoutResourceId, entries);
-            this.layoutResourceId = layoutResourceId;
-            this.context = context;
-            this.entries = entries;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-            View item = inflater.inflate(layoutResourceId, parent, false);
-
-	        TextView rowText = (TextView)item.findViewById(R.id.settingsRowParkingText); // title
-	        ImageView rowImage = (ImageView)item.findViewById(R.id.settingsRowParkingImage); // thumb image
-	        
-//	        rowImage.setImageDrawable(item.getResources().getDrawable(R.drawable.autobotlogo));
-            rowText.setText(entries.get(position));
-            
-            if(position % 2 == 0){
-                item.setBackgroundColor(0xFFFAFAFA);
-            } else {
-                item.setBackgroundColor(0xFFFFFFFF);
-            }
-            
-            return item;
-        }*/
     	
 		ArrayList<String> entries;
         Context context;
@@ -101,10 +65,13 @@ public class SettingsActivity extends ListActivity {
 	        		d = item.getResources().getDrawable(R.drawable.lock);
 	        		break;
 	        	case 1:
-	        		d = item.getResources().getDrawable(R.drawable.redpass);
+	        		d = item.getResources().getDrawable(R.drawable.document);
 	        		break;
 	        	case 2:
-	        		d = item.getResources().getDrawable(R.drawable.notification_icon);
+	        		d = item.getResources().getDrawable(R.drawable.warning);
+	        		break;
+	        	case 3:
+	        		d = item.getResources().getDrawable(R.drawable.recycle_bin);
 	        		break;
 	        	default:
 	        		d = item.getResources().getDrawable(R.drawable.autobotlogo);
@@ -174,7 +141,6 @@ public class SettingsActivity extends ListActivity {
 	    }
     }
 
-
     // This is the Adapter being used to display the list's data
     MainSettingsAdapter mAdapter;
 
@@ -198,14 +164,17 @@ public class SettingsActivity extends ListActivity {
                                     int position, long id) {
                 switch(position){
                     case 0:
-                        setupLoginDialog();
+                        setupLoginDialog(SettingsActivity.this);
                         break;
                     case 1:
-                    	setupPassColor(SettingsActivity.this);
+                    	setupPassColor(SettingsActivity.this, null);
                         break;
                     case 2:
                     	setupNotifications();
                         break;
+                    case 3:
+                    	confirmReset(SettingsActivity.this);
+                    	break;
                     default:                 	
                         break;
                 }
@@ -213,17 +182,24 @@ public class SettingsActivity extends ListActivity {
         });       
     }
 
-    public void setupLoginDialog(){
-        final Dialog dialog = new Dialog(SettingsActivity.this);
+    public static void setupLoginDialog(final Context ctxt){
+        Settings s = new Settings();
+    	
+    	final Dialog dialog = new Dialog(ctxt);
         dialog.setContentView(R.layout.settings_login_dialog);
         dialog.setTitle("Edit your ADP username and password");
 
-        ImageView image = (ImageView) dialog.findViewById(R.drawable.adp_login_normal);
+        //ImageView image = (ImageView) dialog.findViewById(R.drawable.adp_login_normal);
         final EditText user = (EditText) dialog.findViewById(R.id.username);
         final EditText pass = (EditText) dialog.findViewById(R.id.password);
         final Button cancel = (Button) dialog.findViewById(R.id.login_dialog_cancel);
         final Button confirm = (Button) dialog.findViewById(R.id.login_dialog_confirm);
 
+        if(s.passWord.length() > 0 && s.userName.length() > 0){
+        	user.append(s.userName);
+        	pass.append(s.passWord);
+        }
+        
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -235,15 +211,15 @@ public class SettingsActivity extends ListActivity {
             @Override
             public void onClick(View view) {
                 if(user.getText().length() == 0 && pass.getText().length() == 0){
-                    Toast toast = Toast.makeText(getApplicationContext(),
+                    Toast toast = Toast.makeText(ctxt,
                             "Enter a Username and Password", Toast.LENGTH_LONG);
                     toast.show();
                 } else if(user.getText().length() == 0){
-                    Toast toast = Toast.makeText(getApplicationContext(),
+                    Toast toast = Toast.makeText(ctxt,
                             "Enter a Username", Toast.LENGTH_LONG);
                     toast.show();
                 } else if(pass.getText().length() == 0){
-                    Toast toast = Toast.makeText(getApplicationContext(),
+                    Toast toast = Toast.makeText(ctxt,
                             "Enter a Password", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
@@ -260,7 +236,7 @@ public class SettingsActivity extends ListActivity {
         dialog.show();
     }
     
-    public static void setupPassColor(Context ctxt){
+    public static void setupPassColor(final Context ctxt, final Class<?> c){
         final Dialog dialog = new Dialog(ctxt);
         SettingsActivity a = new SettingsActivity();
         dialog.setContentView(R.layout.settings_change_parking_listview);
@@ -281,6 +257,10 @@ public class SettingsActivity extends ListActivity {
 				s.passColor = position;
 	        	s.save();
 	        	dialog.dismiss();
+	        	if(c != null){
+	        		Intent i = new Intent(ctxt, c);
+	        		ctxt.startActivity(i);
+	        	}
 			}
         	
         });
@@ -289,13 +269,16 @@ public class SettingsActivity extends ListActivity {
     public void setupNotifications(){
         final Dialog dialog = new Dialog(SettingsActivity.this);
         dialog.setContentView(R.layout.notification_time_picker);
-        dialog.setTitle("Select a time for your parking reminders");
+        dialog.setTitle("Select a time");
 
+        TextView text = (TextView) dialog.findViewById(R.id.notification_text);
         final TimePicker tp = (TimePicker) dialog.findViewById(R.id.timeSelect);
         final CheckBox repeat = (CheckBox) dialog.findViewById(R.id.repeatWeeklyCheckbox);
         Button cancel = (Button) dialog.findViewById(R.id.cancelTimeSetButton);
         Button confirm = (Button) dialog.findViewById(R.id.confirmTimeSetButton);
 
+        text.setText("Select when you would like to recieve reminders");
+        
         cancel.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -324,4 +307,84 @@ public class SettingsActivity extends ListActivity {
 
         dialog.show();
     }
+    
+    public void confirmReset(Context c){
+        final Settings s = new Settings();
+    	
+    	final Dialog dialog = new Dialog(c);
+        dialog.setContentView(R.layout.simple_dialog);
+        dialog.setTitle("Confirmation");
+
+        //ImageView image = (ImageView) dialog.findViewById(R.drawable.adp_login_normal);
+        final TextView text = (TextView) dialog.findViewById(R.id.simple_dialot_text);
+        final Button cancel = (Button) dialog.findViewById(R.id.simple_dialog_cancel);
+        final Button confirm = (Button) dialog.findViewById(R.id.simple_dialog_confirm);
+        
+        text.setText("Are you sure you want to delete your setting configurations?");
+        
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            	s.resetSettings();
+            	dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.image_credit_menu, menu);
+        return true;
+    	
+
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	
+    	final Dialog dialog = new Dialog(SettingsActivity.this);
+        dialog.setContentView(R.layout.simple_dialog);
+        dialog.setTitle("Image Credit");
+
+        //ImageView image = (ImageView) dialog.findViewById(R.drawable.adp_login_normal);
+        final TextView text = (TextView) dialog.findViewById(R.id.simple_dialot_text);
+        final Button cancel = (Button) dialog.findViewById(R.id.simple_dialog_cancel);
+        final Button confirm = (Button) dialog.findViewById(R.id.simple_dialog_confirm);
+        
+        text.setText("The images on this screen are used in compliance with the DryIcons "
+        		+ "Free License Agreement.\nWould you like to visit this site?");
+        
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://dryicons.com"));
+            	startActivity(browserIntent);
+            	dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        
+		return true;
+    }
+    
+    
 }

@@ -3,11 +3,13 @@
     <string name ="log">Edit Login Credentials</string>
     <string name ="parking">Edit Parking Pass</string>
     <string name ="notifications">Notifications</string>
-
+	<string name ="clear">Reset Settings</string>
+    
     <string-array name="setting_options">
        <item>@string/log</item>
        <item>@string/parking</item>
        <item>@string/notifications</item>
+       <item>@string/clear</item>
     </string-array>
 
 </resources>

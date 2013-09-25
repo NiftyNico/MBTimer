@@ -11,5 +11,7 @@
     <string name="password">Password</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Accept</string>
+    <string name="image_credit">Image Credits</string>
+    <string name="repeat_workday">Repeat on work days</string>
     
 </resources>

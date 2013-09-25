@@ -5,8 +5,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.example.mbtimer.R;
-
+import mb.android.redalert.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,9 +18,8 @@ import android.content.IntentFilter;
  */
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.net.Uri;
-import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 public class AlarmService extends Service {
 
@@ -33,7 +31,6 @@ public class AlarmService extends Service {
 
 	private static final int NOTIFICATION_ID = 1;
 	private NotificationManager notificationManager;
-	private Handler h;
 
     Date time;
 	private Boolean repeatDaily = false;
@@ -49,7 +46,6 @@ public class AlarmService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 
-		h = new Handler();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ACTION);
 		registerReceiver(notifyServiceReceiver, intentFilter);
@@ -57,6 +53,21 @@ public class AlarmService extends Service {
 
 
         Calendar calendar = Calendar.getInstance();
+        int curDay = calendar.get(Calendar.DATE);
+        boolean days31;
+        if(calendar.get(Calendar.MONTH) < 8){
+        	days31 = calendar.get(Calendar.MONTH) % 2 == 0 ? false : true;
+        } else {
+        	days31 = calendar.get(Calendar.MONTH) % 2 == 0 ? true : false;
+        }
+        
+        if(days31 && calendar.get(Calendar.DATE) == 31 || !days31 && calendar.get(Calendar.DATE) == 30)
+        	curDay = 0;
+        calendar.set(Calendar.DATE, ++curDay);
+
+        if(calendar.get(Calendar.MONTH) == Calendar.DECEMBER)
+        	calendar.set(Calendar.MONTH, Calendar.JANUARY);
+        
         calendar.set(Calendar.HOUR_OF_DAY, s.alarmTime.getHours());
         calendar.set(Calendar.MINUTE, s.alarmTime.getMinutes());
         calendar.set(Calendar.SECOND, 0);
@@ -68,14 +79,16 @@ public class AlarmService extends Service {
             new Timer().scheduleAtFixedRate(new TimerTask(){
                 @Override
                 public void run(){
-                    sendNotification("Clock into ADP", "Park: " + s.whereToPark(), "=)", false);
+                	if(Calendar.getInstance().get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY ||
+                			Calendar.getInstance().get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY)
+                    sendNotification("Remember to Clock In", "Park: " + s.whereToPark(), "=)", false);
                 }
             }, time, Constants.Times.DAY);
         } else {
             new Timer().schedule(new TimerTask(){
                 @Override
                 public void run(){
-                    sendNotification("Clock into ADP", "Park: " + s.whereToPark(), "=)", true);
+                    sendNotification("Remember to Clock In", "Park: " + s.whereToPark(), "=)", false);
                 }
             }, time);
         }

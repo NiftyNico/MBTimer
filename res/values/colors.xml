@@ -6,7 +6,7 @@
     <string name="GREEN">Green</string>
     <string name="PURPLE">Purple</string>
     <string name="ORANGE">Orange</string>
-    <string name="GOLD">Gold</string>
+    <string name="GOLD">Gold (Carpool)</string>
     <string name="BLACK">Black</string>
 
     <item name="BLUE_INT" type="integer">0</item>
@@ -36,5 +36,4 @@
         <item>@integer/GOLD_INT</item>
         <item>@integer/BLACK_INT</item>
     </integer-array>
-
 </resources>

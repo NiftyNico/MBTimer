@@ -8,12 +8,10 @@
   style="@style/GenericProgressBackground">
   
   <ProgressBar
-      android:id="@+id/loader"
+      android:id="@+id/adp_loader"
       style="@style/GenericProgressIndicator"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>"
-
-
+      android:layout_height="wrap_content"/>
     
   <WebView
       android:id="@+id/web"

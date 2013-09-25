@@ -1,47 +1,30 @@
 package mb.android.redalert;
 
-import com.example.mbtimer.R;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.webkit.JsResult;
+import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-import android.webkit.HttpAuthHandler;
+import android.widget.TextView;
  
 
+@SuppressLint("SetJavaScriptEnabled")
 public class AdpActivity extends Activity {
 		
-	public class MyWebChromeClient extends WebChromeClient {
-		
-		@Override
-		  public boolean onJsAlert(WebView view, String url, String message,final JsResult result) {
-			//handle Alert event, here we are showing AlertDialog
-			    new AlertDialog.Builder(AdpActivity.this)
-			       .setTitle("JavaScript Alert !")
-			       .setMessage(message)
-			       .setPositiveButton(android.R.string.ok,
-			           new AlertDialog.OnClickListener() {
-			              public void onClick(DialogInterface dialog, int which) {
-			                     result.confirm();
-			               }
-			           }).setCancelable(false).create().show();
-			   return true;
-			  }
-	}
+	public class MyWebChromeClient extends WebChromeClient {}
 	
 	private WebView web;
 	private ProgressBar loader;
-	public static final String ADP_PORTAL = "https://portal.adp.com/wps/employee/employee.jsp";
+	public static final String ADP_PORTAL = "https://portal.adp.com/wps/myportal/sitemap/Employee/TimeAttendance/MyTimecard/";
 
 	
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +34,7 @@ public class AdpActivity extends Activity {
         web = (WebView) findViewById(R.id.web);
         web.setVisibility(View.GONE);
         
-        loader = (ProgressBar) findViewById(R.id.loader);
+        loader = (ProgressBar) findViewById(R.id.adp_loader);
         loader.setVisibility(View.VISIBLE);
         
         WebSettings webSettings = web.getSettings();
@@ -76,10 +59,39 @@ public class AdpActivity extends Activity {
                 view.loadUrl(url);
                 return true;
             }
-
+            
             @Override
             public void onLoadResource(WebView  view, String  url){
-            	
+            	if(url.contains("agateway.adp.com/siteminderagent/bad/login")){
+                	
+                	final Dialog dialog = new Dialog(AdpActivity.this);
+                    dialog.setContentView(R.layout.simple_dialog);
+                    dialog.setTitle("Login attempt failed");
+
+                    //ImageView image = (ImageView) dialog.findViewById(R.drawable.adp_login_normal);
+                    final TextView text = (TextView) dialog.findViewById(R.id.simple_dialot_text);
+                    final Button cancel = (Button) dialog.findViewById(R.id.simple_dialog_cancel);
+                    final Button confirm = (Button) dialog.findViewById(R.id.simple_dialog_confirm);
+                    
+                    text.setText("Would you like to change your login credentials?");
+                    
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    confirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                        	SettingsActivity.setupLoginDialog(AdpActivity.this);
+                        	dialog.dismiss();
+                        }
+                    });
+
+                    dialog.show();
+            	}
             }
             
             @Override
@@ -92,21 +104,23 @@ public class AdpActivity extends Activity {
             
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            	final AlertDialog d = new AlertDialog.Builder(AdpActivity.this).create();
-            	d.setTitle("An error has occurred");
-            	d.setMessage("Please check to make sure that you have internet connection");
-            	d.setButton(DialogInterface.BUTTON_POSITIVE, "Ok",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int buttonId) {
-                                 new Runnable(){
-        							@Override
-        							public void run() {
-        								
-        							}
-                                 }.run();
-                            }
-                        });
-            	d.show();
+            	final Dialog dialog = new Dialog(AdpActivity.this);
+                dialog.setContentView(R.layout.simple_dialog);
+            	dialog.setTitle("An error has occurred");
+            	
+                final TextView text = (TextView) dialog.findViewById(R.id.simple_dialot_text);
+                final Button cancel = (Button) dialog.findViewById(R.id.simple_dialog_cancel);
+                final Button confirm = (Button) dialog.findViewById(R.id.simple_dialog_confirm);
+
+                cancel.setVisibility(View.GONE);
+            	text.setText("Please check to make sure that you have internet connection");
+            	confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    	dialog.dismiss();
+                    }
+                });
+            	dialog.show();
                }
         });
         web.loadUrl(ADP_PORTAL);

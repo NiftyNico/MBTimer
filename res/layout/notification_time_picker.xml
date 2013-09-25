@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <TextView
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/notification_text"/>
+    
     <TimePicker
         android:id="@+id/timeSelect"
         android:layout_width="match_parent"
@@ -14,7 +22,7 @@
         android:id="@+id/repeatWeeklyCheckbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Repeat on work days" />
+        android:text="@string/repeat_workday" />
 
     <LinearLayout
         android:layout_width="match_parent"
