@@ -49,7 +49,7 @@ public class AlarmService extends Service {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ACTION);
 		registerReceiver(notifyServiceReceiver, intentFilter);
-        final Settings s = new Settings();
+        final Settings s = new Settings(AlarmService.this);
 
 
         Calendar calendar = Calendar.getInstance();

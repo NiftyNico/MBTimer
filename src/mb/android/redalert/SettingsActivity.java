@@ -169,10 +169,10 @@ public class SettingsActivity extends ListActivity {
                     case 1:
                     	setupPassColor(SettingsActivity.this, null);
                         break;
+                    /*case 2:
+                    	setupNotifications(SettingsActivity.this);
+                        break;*/
                     case 2:
-                    	setupNotifications();
-                        break;
-                    case 3:
                     	confirmReset(SettingsActivity.this);
                     	break;
                     default:                 	
@@ -183,7 +183,7 @@ public class SettingsActivity extends ListActivity {
     }
 
     public static void setupLoginDialog(final Context ctxt){
-        Settings s = new Settings();
+        Settings s = new Settings(ctxt);
     	
     	final Dialog dialog = new Dialog(ctxt);
         dialog.setContentView(R.layout.settings_login_dialog);
@@ -223,11 +223,11 @@ public class SettingsActivity extends ListActivity {
                             "Enter a Password", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
-                    Settings s = new Settings();
+                    Settings s = new Settings(ctxt);
                     s.userName = user.getText().toString();
                     s.passWord = pass.getText().toString();
                     
-                    s.save();
+                    s.save(ctxt);
                     dialog.dismiss();
                 }
             }
@@ -252,10 +252,37 @@ public class SettingsActivity extends ListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position,
 					long id) {
-				Settings s = new Settings();
+				Settings s = new Settings(ctxt);
 		    
 				s.passColor = position;
-	        	s.save();
+				switch(position){
+	        		case 0:
+	        			s.passImage = R.drawable.bluepassmarker;
+	        			break;
+	        		case 1:
+	        			s.passImage = R.drawable.greypassmarker;
+	        			break;
+	        		case 2:
+	        			s.passImage = R.drawable.greenpassmarker;
+	        			break;
+	        		case 3:
+	        			s.passImage = R.drawable.purplepassmarker;
+	        			break;
+	        		case 4:
+	        			s.passImage = R.drawable.orangepassmarker;
+	        			break;
+	        		case 5:
+	        			s.passImage = R.drawable.goldpassmarker;
+	        			break;
+	        		case 6:
+	        			s.passImage = R.drawable.blackpassmarker;
+	        			break;
+	        		default:
+	        			s.passImage = R.drawable.autobotlogo;
+	        			break;
+				}
+				
+	        	s.save(ctxt);
 	        	dialog.dismiss();
 	        	if(c != null){
 	        		Intent i = new Intent(ctxt, c);
@@ -266,7 +293,7 @@ public class SettingsActivity extends ListActivity {
         });
     }
 
-    public void setupNotifications(){
+    public void setupNotifications(final Context ctxt){
         final Dialog dialog = new Dialog(SettingsActivity.this);
         dialog.setContentView(R.layout.notification_time_picker);
         dialog.setTitle("Select a time");
@@ -294,11 +321,11 @@ public class SettingsActivity extends ListActivity {
                 calendar.set(Calendar.MINUTE, tp.getCurrentMinute());
                 calendar.set(Calendar.SECOND, 0);
                 
-                Settings s = new Settings();
+                Settings s = new Settings(ctxt);
                 
                 s.alarmTime = calendar.getTime();
                 s.repeatDaily = repeat.isChecked();           
-                s.save();
+                s.save(ctxt);
 
                 startService(new Intent(SettingsActivity.this, AlarmService.class));
                 dialog.dismiss();
@@ -308,10 +335,10 @@ public class SettingsActivity extends ListActivity {
         dialog.show();
     }
     
-    public void confirmReset(Context c){
-        final Settings s = new Settings();
+    public void confirmReset(Context ctxt){
+        final Settings s = new Settings(ctxt);
     	
-    	final Dialog dialog = new Dialog(c);
+    	final Dialog dialog = new Dialog(ctxt);
         dialog.setContentView(R.layout.simple_dialog);
         dialog.setTitle("Confirmation");
 
@@ -332,7 +359,7 @@ public class SettingsActivity extends ListActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	s.resetSettings();
+            	s.resetSettings(SettingsActivity.this);
             	dialog.dismiss();
             }
         });

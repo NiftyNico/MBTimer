@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -16,6 +17,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import android.content.Context;
 import android.util.Log;
 
 public class Settings implements Serializable {
@@ -100,29 +102,28 @@ public class Settings implements Serializable {
 		}
 	}
 
-	public static final File SETTINGS_FILE = new File(android.os.Environment
-			.getExternalStorageDirectory().getAbsolutePath(),
-			"Red_Alert_Settings");
+	public static final String SETTINGS_FILE = "Red_Alert_Settings.data";
 	private static final long serialVersionUID = 235836905978792519L;
 
 	String userName;
 	String passWord;
 	int passColor;
+	int passImage;
 	Date alarmTime;
 	Boolean repeatDaily;
 
-	public Settings() {
+	public Settings(Context ctxt) {
 		
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
-					SETTINGS_FILE));
+			ObjectInputStream ois = new ObjectInputStream(ctxt.openFileInput(SETTINGS_FILE));
 			Settings s = (Settings) ois.readObject();
 			ois.close();
 			Secure sCrypt = new Secure();
 
-			this.userName = sCrypt.decrypt("DONOTSEE", s.userName);
-			this.passWord = sCrypt.decrypt("DONOTSEE", s.passWord);
+			this.userName = sCrypt.decrypt("fortheloveofgoddontseethis", s.userName);
+			this.passWord = sCrypt.decrypt("fortheloveofgoddontseethis", s.passWord);
 			this.passColor = s.passColor;
+			this.passImage = s.passImage;
 			this.alarmTime = s.alarmTime;
 			this.repeatDaily = s.repeatDaily;
 		} catch (Exception ex) {
@@ -132,32 +133,32 @@ public class Settings implements Serializable {
 			this.userName = "";
 			this.passWord = "";
 			this.passColor = -1;
+			this.passImage = -1;
 			this.alarmTime = null;
 			this.repeatDaily = false;
 		}
 	}
 
-	public void save() {
+	public void save(Context ctxt) {
 		Secure sCrypt = new Secure();
 		try {
-			ObjectOutputStream oos = new ObjectOutputStream(
-					new FileOutputStream(SETTINGS_FILE));
-			userName = sCrypt.encrypt("DONOTSEE",userName);
-			passWord = sCrypt.encrypt("DONOTSEE",passWord);
+			ObjectOutputStream oos = new ObjectOutputStream(ctxt.openFileOutput(SETTINGS_FILE, Context.MODE_PRIVATE));
+			userName = sCrypt.encrypt("fortheloveofgoddontseethis",userName);
+			passWord = sCrypt.encrypt("fortheloveofgoddontseethis",passWord);
 			
 			oos.writeObject(this);
 			oos.flush();
 			oos.close();
+			Log.v("Save Success! : ", SETTINGS_FILE);
 		} catch (Exception ex) {
 			Log.v("Serialization Save Error : ", ex.getMessage() + "\n" + ex.toString());
 			ex.printStackTrace();
 		}
 	}
 
-	public Settings loadSerializedObject() {
+	/*public Settings loadSerializedObject(Context ctxt) {
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
-					SETTINGS_FILE));
+			ObjectInputStream ois = new ObjectInputStream(ctxt.openFileInput(SETTINGS_FILE));
 			Object o = ois.readObject();
 			ois.close();
 			return ((Settings) o);
@@ -166,7 +167,7 @@ public class Settings implements Serializable {
 			ex.printStackTrace();
 			return null;
 		}
-	}
+	}*/
 
 	public String whereToPark() {
 		if (passColor < 0)
@@ -197,7 +198,7 @@ public class Settings implements Serializable {
 		}
 	}
 	
-	public void resetSettings(){
-		SETTINGS_FILE.delete(); 
+	public void resetSettings(Context ctxt){
+		ctxt.deleteFile(SETTINGS_FILE); 
 	}
 }

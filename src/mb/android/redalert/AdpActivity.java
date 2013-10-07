@@ -97,7 +97,7 @@ public class AdpActivity extends Activity {
             @Override
             public void onReceivedHttpAuthRequest(WebView view,
             		HttpAuthHandler handler, String host, String realm) {
-                Settings s = new Settings();
+                Settings s = new Settings(AdpActivity.this);
                 handler.proceed(s.userName, s.passWord);
 
             }

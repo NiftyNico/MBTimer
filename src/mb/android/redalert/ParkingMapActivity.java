@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.MapController;
@@ -40,7 +41,7 @@ public class ParkingMapActivity extends FragmentActivity {
         map = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         whereToPark = (TextView) findViewById(R.id.whereToPark);
         
-        Settings s = new Settings();
+        Settings s = new Settings(ParkingMapActivity.this);
         if(s.passColor < 0){
         	promptParkingChange();
         }
@@ -49,13 +50,13 @@ public class ParkingMapActivity extends FragmentActivity {
         	whereToPark.setText(s.whereToPark());
 
         	if(whereToPark.getText().equals("Onsite")){
-                map.addMarker(new MarkerOptions().position(MBHQ));
+                map.addMarker(new MarkerOptions().position(MBHQ).icon(BitmapDescriptorFactory.fromResource(s.passImage)));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(MBHQ,15));
         	} else if(whereToPark.getText().equals("Farm Bureau")){
-                map.addMarker(new MarkerOptions().position(BUREAU));
+                map.addMarker(new MarkerOptions().position(BUREAU).icon(BitmapDescriptorFactory.fromResource(s.passImage)));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(BUREAU,15));
         	} else {
-                map.addMarker(new MarkerOptions().position(VONS));
+                map.addMarker(new MarkerOptions().position(VONS).icon(BitmapDescriptorFactory.fromResource(s.passImage)));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(VONS,15));
         	}
     	
@@ -67,7 +68,7 @@ public class ParkingMapActivity extends FragmentActivity {
     }
     
     public void promptParkingChange(){
-        final Settings s = new Settings();
+        final Settings s = new Settings(ParkingMapActivity.this);
     	
     	final Dialog dialog = new Dialog(ParkingMapActivity.this);
         dialog.setContentView(R.layout.simple_dialog);
@@ -90,7 +91,7 @@ public class ParkingMapActivity extends FragmentActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            	SettingsActivity.setupPassColor(ParkingMapActivity.this, ParkingMapActivity.class);
+            	SettingsActivity.setupPassColor(ParkingMapActivity.this, AndroidTabLayoutActivity.class);
             	dialog.dismiss();
             }
         });
