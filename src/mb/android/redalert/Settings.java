@@ -181,21 +181,21 @@ public class Settings implements Serializable {
 
 		if (passColor > 4)
 			return "Onsite";
-
-		switch ((passColor + weekNo) % 5) {
+		return "Offsite";
+		/*switch ((passColor + weekNo) % 5) {
 		case 0:
 			return "Onsite";
 		case 1:
 			return "Offsite";
 		case 2:
-			return "Farm Bureau";
+			return "Offsite";
 		case 3:
 			return "Offsite";
 		case 4:
 			return "Offsite";
 		default:
 			return "This should absolutely never ever happen";
-		}
+		}*/
 	}
 	
 	public void resetSettings(Context ctxt){
